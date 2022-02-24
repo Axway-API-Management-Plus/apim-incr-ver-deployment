@@ -17,7 +17,7 @@ This project successfully tested with following versions:
 ## Build the project
 
 ```bash
-	$mvn clean package 
+$mvn clean package 
 ```
 
 ## Help
