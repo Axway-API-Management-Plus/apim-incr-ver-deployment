@@ -22,6 +22,8 @@ This project successfully tested with following versions:
 
 ## Help
 
+```
+
 -c, --clusterurl=<urls>   Space seperated API Manager Cluster URLs
 -e, --url=<url>           API Manager URL
 -h, --help                Show this help message and exit.
@@ -33,7 +35,7 @@ This project successfully tested with following versions:
 -u, --username=<username> API Manager Username
 -V, --version             Print version information and exit.
 
-
+```
 
 ## Usage
 
