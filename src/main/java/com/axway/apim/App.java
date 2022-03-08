@@ -32,7 +32,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
 @CommandLine.Command(description = "APIM Deployment",
-        name = "apim", mixinStandardHelpOptions = true, version = "1.0.1")
+    name = "apim", mixinStandardHelpOptions = true, version = "1.0.1")
 public class App implements Callable<Integer> {
 
     private static final Logger logger = LoggerFactory.getLogger(App.class);
@@ -61,9 +61,6 @@ public class App implements Callable<Integer> {
     @CommandLine.Option(required = true, names = {"-i", "--openapi"}, description = "Open API File location")
     private File openAPI;
 
-//    @CommandLine.Option(names = {"-nd", "--new_deployment"}, description = "New Deployment")
-//    private boolean newDeployment = false;
-
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     public static void main(String[] args) {
@@ -84,7 +81,7 @@ public class App implements Callable<Integer> {
         APIManager apiManager = null;
         try {
             apiManager = createAPIMService(url, username, password);
-            if(apiManager == null)
+            if (apiManager == null)
                 return 1;
             APIMService apimService = apiManager.getApimService();
             String orgId = getOrgId(apimService, orgName);
@@ -94,7 +91,7 @@ public class App implements Callable<Integer> {
             Response<List<Map<String, Object>>> response = apimService.listFrontendAPIsByName("name", "eq", apiName).execute();
             if (response.isSuccessful()) {
                 List<Map<String, Object>> apis = response.body();
-                if ( apis == null || apis.size() == 0){
+                if (apis == null || apis.size() == 0) {
                     logger.error(" No Match for the API : {}", apiName);
                     return 1;
                 }
@@ -129,14 +126,13 @@ public class App implements Callable<Integer> {
                                     logger.info("Upgrading API {} with new API {}", id, newAPIId);
                                     statusCode = upgradeAPI(apimService, id, newAPIId);
                                     if (statusCode == 204) {
-                                      //  if (newDeployment) {
-                                               if (checkCatalogForPublishedState(apimService, newAPIId)) {
-                                                statusCode = deprecateAPI(apimService, id);
-                                                if (statusCode == 201) {
-                                                    logger.info("Deprecate API with id : {}", id);
-                                                    return 0;
-                                                }
-                              //              }
+
+                                        if (checkCatalogForPublishedState(apimService, newAPIId)) {
+                                            statusCode = deprecateAPI(apimService, id);
+                                            if (statusCode == 201) {
+                                                logger.info("Deprecate API with id : {}", id);
+                                                return 0;
+                                            }
                                         } else {
                                             logger.info("Un publish API with id : {}", id);
                                             statusCode = unPublishAPI(apimService, id);
@@ -156,9 +152,9 @@ public class App implements Callable<Integer> {
                             }
 
                         }
+                    } else {
+                        logger.info(" The openapi definition is not changed, exiting.. ");
                     }
-                }else{
-                    logger.info(" The openapi definition is not changed, exiting.. ");
                 }
                 return 1;
             }
@@ -166,7 +162,7 @@ public class App implements Callable<Integer> {
             logger.error("Error processing", e);
         } finally {
 
-            if( apiManager != null) {
+            if (apiManager != null) {
                 APIMService apimService = apiManager.getApimService();
                 apimService.logout();
             }
@@ -175,14 +171,14 @@ public class App implements Callable<Integer> {
     }
 
 
-    private OkHttpClient newClient(CookieJar cookieJar, HttpLoggingInterceptor httpLoggingInterceptor,   CSRFTokenInterceptor csrfTokenInterceptor) {
+    private OkHttpClient newClient(CookieJar cookieJar, HttpLoggingInterceptor httpLoggingInterceptor, CSRFTokenInterceptor csrfTokenInterceptor) {
 
         return new OkHttpClient.Builder()
-                .addInterceptor(httpLoggingInterceptor)
-                .addInterceptor(csrfTokenInterceptor)
-                .cookieJar(cookieJar)
-                .followRedirects(false)
-                .build();
+            .addInterceptor(httpLoggingInterceptor)
+            .addInterceptor(csrfTokenInterceptor)
+            .cookieJar(cookieJar)
+            .followRedirects(false)
+            .build();
     }
 
     public boolean checkCatalogForPublishedState(APIMService apimService, String id) throws IOException {
@@ -209,7 +205,7 @@ public class App implements Callable<Integer> {
             }
 
             if (state.equals("published")) {
-                if(newObj.equals(apimService)){
+                if (newObj.equals(apimService)) {
                     apimService.logout();
                 }
                 if (urls == null || urls.isEmpty()) {
@@ -219,9 +215,9 @@ public class App implements Callable<Integer> {
                     String secondaryURL = urls.pop();
                     logger.info("Checking secondary URL : {}", secondaryURL);
                     APIManager apiManager = createAPIMService(secondaryURL, username, password);
-                    if(apiManager != null) {
+                    if (apiManager != null) {
                         newObj = apiManager.getApimService();
-                    }else{
+                    } else {
                         logger.error("Unable to connect to API manager : {}", secondaryURL);
                     }
                 }
@@ -354,22 +350,22 @@ public class App implements Callable<Integer> {
     }
 
 
-    private OkHttpClient newUnsecureSSLClient(CookieJar cookieJar, HttpLoggingInterceptor httpLoggingInterceptor,  CSRFTokenInterceptor csrfTokenInterceptor) {
+    private OkHttpClient newUnsecureSSLClient(CookieJar cookieJar, HttpLoggingInterceptor httpLoggingInterceptor, CSRFTokenInterceptor csrfTokenInterceptor) {
         final TrustManager[] trustAllCerts = new TrustManager[]{
-                new X509TrustManager() {
-                    @Override
-                    public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) {
-                    }
-
-                    @Override
-                    public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String authType) {
-                    }
-
-                    @Override
-                    public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-                        return new java.security.cert.X509Certificate[]{};
-                    }
+            new X509TrustManager() {
+                @Override
+                public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) {
                 }
+
+                @Override
+                public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String authType) {
+                }
+
+                @Override
+                public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                    return new java.security.cert.X509Certificate[]{};
+                }
+            }
         };
 
         try {
@@ -377,17 +373,17 @@ public class App implements Callable<Integer> {
             sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
             final SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
             return new OkHttpClient.Builder()
-                    .addInterceptor(httpLoggingInterceptor)
-                    .addInterceptor(csrfTokenInterceptor)
-                    // .addInterceptor(basicAuthInterceptor)
-                    .cookieJar(cookieJar)
-                    .followRedirects(false)
-                    .connectTimeout(120, TimeUnit.SECONDS)
-                    .readTimeout(120, TimeUnit.SECONDS)
-                    .writeTimeout(120, TimeUnit.SECONDS)
-                    .hostnameVerifier((s, sslSession) -> true)
-                    .sslSocketFactory(sslSocketFactory, (X509TrustManager) trustAllCerts[0])
-                    .build();
+                .addInterceptor(httpLoggingInterceptor)
+                .addInterceptor(csrfTokenInterceptor)
+                // .addInterceptor(basicAuthInterceptor)
+                .cookieJar(cookieJar)
+                .followRedirects(false)
+                .connectTimeout(120, TimeUnit.SECONDS)
+                .readTimeout(120, TimeUnit.SECONDS)
+                .writeTimeout(120, TimeUnit.SECONDS)
+                .hostnameVerifier((s, sslSession) -> true)
+                .sslSocketFactory(sslSocketFactory, (X509TrustManager) trustAllCerts[0])
+                .build();
         } catch (NoSuchAlgorithmException | KeyManagementException e) {
             e.printStackTrace();
         }
@@ -425,10 +421,10 @@ public class App implements Callable<Integer> {
         }
 
         Retrofit apimRetrofit = new Retrofit.Builder()
-                .baseUrl(httpURL)
-                .client(client)
-                .addConverterFactory(JacksonConverterFactory.create())
-                .build();
+            .baseUrl(httpURL)
+            .client(client)
+            .addConverterFactory(JacksonConverterFactory.create())
+            .build();
 
         APIMService apimService = apimRetrofit.create(APIMService.class);
         Response<ResponseBody> loginResponse = apimService.login(username, password).execute();

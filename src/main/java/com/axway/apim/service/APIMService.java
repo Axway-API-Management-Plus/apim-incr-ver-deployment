@@ -58,11 +58,6 @@ public interface APIMService {
     @GET("/api/portal/v1.3/organizations")
     Call<ResponseBody> getOrganizationByName(@Query("field") String field, @Query("op") String op, @Query("value") String value);
 
-    @GET("/api/portal/v1.4/discovery/swagger/apis")
+    @GET("/api/portal/v1.3/discovery/swagger/apis")
     Call<ResponseBody> listCatalogByName(@Query("field") String field, @Query("op") String op, @Query("value") String value);
-
-    @POST("/applications/{appId}/apis")
-    Call<ResponseBody> addAPItoApplication( @Path("appId")String id);
-
-
 }
