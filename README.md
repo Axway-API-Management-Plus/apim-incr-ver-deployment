@@ -66,13 +66,13 @@ Deployment script does the following.
 ## Deploy API without checking all API Gateway servers in a cluster for deployment API replication. 
 
 ```
-$java -jar westpac-deployment-1.0.1.jar -e https://10.129.58.31:8077 -u apiadmin -p changeme -n petstore -o Development -i swagger.json -s
+$java -jar apim-deployment-1.0.1.jar -e https://10.129.58.31:8077 -u apiadmin -p changeme -n petstore -o Development -i swagger.json -s
 ```
 
 ## Deploy API and check all API Gateway servers in a cluster for deployment API replication.
 
 ```
-$java -jar westpac-deployment-1.0.1.jar -e https://10.129.58.31:8077 -c https://10.129.58.32:8077 https://10.129.58.33:8077  -u apiadmin -p changeme -n pestore -o Westpac -i swagger.json -s
+$java -jar apim-deployment-1.0.1.jar -e https://10.129.58.31:8077 -c https://10.129.58.32:8077 https://10.129.58.33:8077  -u apiadmin -p changeme -n pestore -o Westpac -i swagger.json -s
 ```
 
 ## Contributing
